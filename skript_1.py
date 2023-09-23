@@ -5,6 +5,8 @@ author: Pavel Šalanda
 email: pavel.salanda@gmail.com
 discord: pavelsalanda
 """
+import re
+
 TEXTS = ['''
 Situated about 10 miles west of Kemmerer,
 Fossil Butte is a ruggedly impressive
@@ -91,17 +93,23 @@ There are {Number_of_words} words in the selected text.''')
         print(f'''{separator}
 LEN|  OCCURENCES  |NR. 
 {separator}''') 
+        clear_text = [re.sub(r'[^\w\s]', '', text) for text in TEXTS]
         occurences = {}
-        for i in TEXTS[text_number].split():
+        for i in clear_text[text_number].split():
             number = str(len(i))
             if number in occurences:
                 occurences[number] += 1 
             else:
                 occurences[number] = 1
-        sorted_occurences = sorted(occurences.items(), 
+        max_value = max(occurences.values())  
+        max_len_key = max(len(klic) for klic in occurences.keys())
+        sorted_occurences = sorted(occurences.items(),                   
         key = lambda x: int(x[0]))
         for key, value in sorted_occurences:
-            print(key, '|', value * '*', '|', value)
+            gap_len = max_len_key - len(key)
+            gap_len_2 = max_value - value
+            print(' ' * gap_len,key, '|', value * '*',
+                  ' ' * gap_len_2, '|', value)
     else:
         print('Incorrect number, exit the program.')
 else:
